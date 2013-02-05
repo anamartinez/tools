@@ -3,7 +3,7 @@ def copy_all_files
 end
 
 def locales
-  Dir["js-cldr-timezones/lib/assets/javascripts/js_cldr/*"].map { |path| path =~ /([\w-]+)_cldr_timezones\.js/ && $1 }
+  Dir["../js-cldr-timezones/lib/assets/javascripts/js_cldr/*"].map { |path| path =~ /([\w-]+)_cldr_timezones\.js/ && $1 }
 end
 
 def copy_file_from_js_project(locale)
@@ -13,15 +13,15 @@ def copy_file_from_js_project(locale)
 end
 
 def read_js_file(locale)
-  File.read("js-cldr-timezones/lib/assets/javascripts/js_cldr/#{locale}_cldr_timezones.js")
+  File.read("../js-cldr-timezones/lib/assets/javascripts/js_cldr/#{locale}_cldr_timezones.js")
 end
 
 def modify_first_line_of_file(js_file, locale)
-  js_file.gsub("var #{locale}_cldr_timezones_hash = {", "var #{locale}_cldr_timezones_hash = exports.#{locale}_cldr_timezones_hash = {")
+  js_file.gsub("var #{locale}_cldr_timezones_hash = {", "module.exports = {")
 end
 
 def write_file_to_npm_project(js_file, locale)
-  File.open("npm-cldr-timezones/cldr_timezones/#{locale}_cldr_timezones.js", "w") {|target| target << js_file}
+  File.open("../npm-cldr-timezones/lib/#{locale}.js", "w") {|target| target << js_file}
 end
 
 copy_all_files
